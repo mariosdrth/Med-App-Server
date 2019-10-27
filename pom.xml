@@ -114,7 +114,6 @@
 			<artifactId>jaxb-api</artifactId>
 			<version>1.0</version>
 		</dependency>
-
 		<!--Junit-->
 <!--		<dependency>-->
 <!--			<groupId>junit</groupId>-->
