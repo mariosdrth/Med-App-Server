@@ -1,16 +1,19 @@
 package com.patients.gdpr;
 
-import org.junit.Test;
+import com.patients.gdpr.controllers.UserControllerTest;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.junit.runners.Suite;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+import static org.junit.runners.Suite.*;
+
+@RunWith(Suite.class)
+@SuiteClasses({
+		UserControllerTest.class
+})
 public class GdprApplicationTests {
 
-	@Test
-	public void contextLoads() {
-	}
+//	@Test
+//	public void contextLoads() {
+//	}
 
 }

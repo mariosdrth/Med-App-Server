@@ -21,7 +21,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>8</java.version>
+		<java.version>11</java.version>
 		<querydsl.version>4.1.4</querydsl.version>
 	</properties>
 
@@ -116,10 +116,16 @@
 		</dependency>
 
 		<!--Junit-->
+<!--		<dependency>-->
+<!--			<groupId>junit</groupId>-->
+<!--			<artifactId>junit</artifactId>-->
+<!--			<version>4.12</version>-->
+<!--			<scope>test</scope>-->
+<!--		</dependency>-->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.1.0</version>
 			<scope>test</scope>
 		</dependency>
 		<!-- Servlet -->
@@ -162,6 +168,20 @@
 			<artifactId>querydsl-jpa</artifactId>
 			<version>${querydsl.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>3.1.0</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>net.bytebuddy</groupId>
+			<artifactId>byte-buddy</artifactId>
+			<version>1.10.2</version>
+		</dependency>
+
 
 		<!--<dependency>-->
 		<!--<groupId>org.slf4j</groupId>-->
@@ -215,7 +235,12 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.20.1</version>
+				<version>2.21.0</version>
+				<configuration>
+					<excludes>
+						<exclude>**/GdprApplicationTests.java</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
