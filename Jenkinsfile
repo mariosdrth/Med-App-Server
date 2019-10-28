@@ -31,8 +31,8 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'cp /var/jenkins_home/workspace/pipeline-med-app/target/*.jar /var/jenkins_home/workspace/pipeline-med-app/server/gdpr.jar'
-                sh 'docker-compose up -d'
+                sh 'pwd'
+                sh 'whereis docker-compose'
             }
         }
     }
