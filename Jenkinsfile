@@ -5,6 +5,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'id'
+                sh 'which docker-compose'
             }
         }
     }
