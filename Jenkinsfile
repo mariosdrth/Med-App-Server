@@ -6,7 +6,7 @@ pipeline {
         }
     }
     environment {
-        PATH = "/usr/local/bin"
+        PATHDOCKERCOMP = "/usr/local/bin"
     }
     stages {
         stage('Build') {
@@ -33,7 +33,7 @@ pipeline {
             steps {
                 sh 'cp /var/jenkins_home/workspace/pipeline-med-app/target/*.jar /var/jenkins_home/med_app/server/gdpr.jar'
                 sh 'cd /var/jenkins_home/med_app/'
-                sh '$PATH/docker-compose up -d'
+                sh '$PATHDOCKERCOMP/docker-compose up -d'
             }
         }
     }
