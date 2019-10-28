@@ -14,3 +14,4 @@ Spring boot project, dependencies:
 Clone project and run with `mvn spring-boot:run`. Db connection properties, server port etc in _application.properties_ file.
 
 ## Test
+_test_
