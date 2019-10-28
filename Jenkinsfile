@@ -31,7 +31,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh './var/jenkins_home/med_app/docker-comp.sh'
+                sh '/var/jenkins_home/med_app/docker-comp.sh'
             }
         }
     }
