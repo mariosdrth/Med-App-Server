@@ -21,6 +21,11 @@ pipeline {
                 }
             }
         }
-
+        stage('Deploy') {
+            steps {
+                sh 'cd /home/jenkins/jenkins-data/med_app'
+                sh 'docker-compose up -d'
+            }
+        }
     }
 }
