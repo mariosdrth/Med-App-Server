@@ -6,7 +6,6 @@ pipeline {
             steps {
                 sh 'id'
                 sh 'which docker-compose'
-                sh 'docker-compose'
                 sh 'pwd'
                 sh 'cd /var/jenkins_home/med_app/'
                 sh 'pwd'
