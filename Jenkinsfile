@@ -10,6 +10,11 @@ pipeline {
             steps {
                 sh 'mvn -B -DskipTests clean package'
             }
+            post {
+                success {
+                   archiveArtifacts artifacts: 'java-app/target/*.jar', fingerprint: true
+                }
+            }
         }
         stage('Test') {
             steps {
@@ -22,10 +27,9 @@ pipeline {
             }
         }
         stage('Deploy') {
-            steps {
-                sh 'cd /home/jenkins/jenkins-data/med_app'
-                sh 'docker-compose up -d'
-            }
+            sh 'cp /var/jenkins_home/workspace/pipeline-med-app/target/*.jar /var/jenkins_home/med_app/server/gdpr.jar'
+            sh 'cd /var/jenkins_home/med_app/'
+            sh 'docker-compose up -d'
         }
     }
 }
