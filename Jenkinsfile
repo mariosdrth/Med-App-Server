@@ -49,6 +49,7 @@ pipeline {
         stage('Deploy') {
             agent any
             steps {
+                sh 'cd ./med_app/ && docker-compose down'
                 sh 'cp /var/jenkins_home/workspace/pipeline-med-app/target/*.jar /var/jenkins_home/med_app/server/gdpr.jar'
                 sh 'cd ./med_app/ && docker-compose -f docker-compose.yml build --no-cache'
                 sh 'cd ./med_app/ && docker-compose up -d'
