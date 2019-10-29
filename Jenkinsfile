@@ -1,5 +1,5 @@
 pipeline {
-
+    agent none
     environment {
         PATHDOCKERCOMP = "/usr/local/bin"
     }
