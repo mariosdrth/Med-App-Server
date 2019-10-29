@@ -2,8 +2,17 @@ pipeline {
     agent none
     environment {
         PATHDOCKERCOMP = "/usr/local/bin"
+        PWD = credentials('git-creds')
+        USERNAME = mariosdrth
     }
     stages {
+        stage('Preparation') {
+            agent any
+            steps {
+                sh 'git clone https://$USERNAME:$PWD@github.com/mariosdrth/Med_Docker.git med_app'
+                sh 'git clone https://$USERNAME:$PWD@github.com/mariosdrth/Med_App_Db.git ./med_app/db-data'
+            }
+        }
         stage('Build') {
             agent {
                 docker {
@@ -11,7 +20,6 @@ pipeline {
                     args '-v /root/.m2:/root/.m2'
                 }
             }
-
             steps {
                 sh 'mvn -B -DskipTests clean package'
             }
@@ -28,7 +36,6 @@ pipeline {
                     args '-v /root/.m2:/root/.m2'
                 }
             }
-
             steps {
                 sh 'mvn test'
             }
@@ -41,7 +48,9 @@ pipeline {
         stage('Deploy') {
             agent any
             steps {
-                sh '/var/jenkins_home/workspace/pipeline-med-app/docker-comp.sh'
+                sh 'cp /var/jenkins_home/workspace/pipeline-med-app/target/*.jar /var/jenkins_home/med_app/server/gdpr.jar'
+                sh 'cd ./med_app/ && docker-compose -f docker-compose.yml build --no-cache'
+                sh 'cd ./med_app/ && docker-compose up -d'
             }
         }
     }
