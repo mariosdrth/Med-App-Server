@@ -7,11 +7,7 @@ pipeline {
         stage('Preparation') {
             agent any
             steps {
-                def USERNAME
-                def PASSWORD
-                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId:'git-creds', usernameVariable: 'USERNAME_MASKED', passwordVariable: 'PASSWORD_MASKED']]) {
-                    USERNAME = '${USERNAME_MASKED}'
-                    PASSWORD = '${PASSWORD_MASKED}'
+                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId:'git-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
                 }
                 sh 'echo ${USERNAME}'
                 sh 'rm -rf med_app'
