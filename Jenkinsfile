@@ -3,7 +3,7 @@ pipeline {
     environment {
         PATHDOCKERCOMP = "/usr/local/bin"
         PWD = credentials('git-creds')
-        USERNAME = mariosdrth
+        USERNAME = 'mariosdrth'
     }
     stages {
         stage('Preparation') {
