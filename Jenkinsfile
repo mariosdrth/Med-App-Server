@@ -31,7 +31,6 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'cat docker-comp.sh'
                 sh '/var/jenkins_home/workspace/pipeline-med-app/docker-comp.sh'
             }
         }
