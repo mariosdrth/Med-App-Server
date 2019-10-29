@@ -1,14 +1,12 @@
 pipeline {
     agent none
     environment {
-        PASSWORD = credentials('git-creds')
-        USERNAME = 'mariosdrth'
     }
     stages {
         stage('Preparation') {
             agent any
-            steps {
-                sh './prepare.sh $USERNAME $PASSWORD'
+            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId:'git-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+              sh './prepare.sh $USERNAME $PASSWORD'
             }
         }
         stage('Build') {
