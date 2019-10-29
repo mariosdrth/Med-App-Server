@@ -8,7 +8,9 @@ pipeline {
             agent any
             steps {
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId:'git-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-                  sh './prepare.sh $USERNAME $PASSWORD'
+                    sh 'rm -rf med_app'
+                    sh 'git clone https://$USERNAME:$PASSWORD@github.com/mariosdrth/Med_Docker.git med_app'
+                    sh 'git clone https://$USERNAME:$PASSWORD@github.com/mariosdrth/Med_App_Db.git ./med_app/db-data'
                 }
             }
         }
