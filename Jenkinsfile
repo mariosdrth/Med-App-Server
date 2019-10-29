@@ -1,12 +1,15 @@
 pipeline {
     agent none
     environment {
+        PATHDOCKER='/usr/bin/docker'
     }
     stages {
         stage('Preparation') {
             agent any
-            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId:'git-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-              sh './prepare.sh $USERNAME $PASSWORD'
+            steps {
+                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId:'git-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+                  sh './prepare.sh $USERNAME $PASSWORD'
+                }
             }
         }
         stage('Build') {
