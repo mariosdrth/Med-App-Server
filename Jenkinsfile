@@ -9,9 +9,7 @@ pipeline {
         stage('Preparation') {
             agent any
             steps {
-                sh 'rm -rf med_app'
-                sh 'git clone https://${USERNAME}:${PASSWORD}@github.com/mariosdrth/Med_Docker.git med_app'
-                sh 'git clone https://${USERNAME}:${PASSWORD}@github.com/mariosdrth/Med_App_Db.git ./med_app/db-data'
+                sh 'cd ./med_app && git fetch && git pull'
             }
         }
         stage('Build - Backend') {
@@ -46,7 +44,22 @@ pipeline {
                 }
             }
         }
-        
+        stage('Build - Front End') {
+            agent {
+                docker {
+                    image 'node:8.11.1-alpine'
+                }
+            }
+            steps {
+                sh 'yum install git'
+                sh 'git clone https://${USERNAME}:${PASSWORD}@github.com/mariosdrth/Med_Docker.git ./med_app/client/clone'
+                sh 'npm install -g @angular/cli@6.2.3'
+                sh 'ng build --prod'
+                sh 'rm -rf ./med_app/client/dist/'
+                sh 'mkdir ./med_app/client/dist/'
+                sh 'cp -r ./med_app/client/clone/dist/* ./med_app/client/dist/.'
+            }
+        }
         stage('Deploy') {
             agent any
             steps {
