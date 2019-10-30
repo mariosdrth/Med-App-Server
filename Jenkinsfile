@@ -14,7 +14,7 @@ pipeline {
                 sh 'git clone https://${USERNAME}:${PASSWORD}@github.com/mariosdrth/Med_App_Db.git ./med_app/db-data'
             }
         }
-        stage('Build') {
+        stage('Build - Backend') {
             agent {
                 docker {
                     image 'maven:alpine'
@@ -44,6 +44,21 @@ pipeline {
                 always {
                     junit 'target/surefire-reports/*.xml'
                 }
+            }
+        }
+        stage('Build - Front End') {
+            agent {
+                docker {
+                    image 'node:8.11.1-alpine'
+                }
+            }
+            steps {
+                sh 'git clone https://${USERNAME}:${PASSWORD}@github.com/mariosdrth/Med_Docker.git ./med_app/client/clone'
+                sh 'npm install -g @angular/cli@6.2.3'
+                sh 'ng build --prod'
+                sh 'rm -rf ./med_app/client/dist/'
+                sh 'mkdir ./med_app/client/dist/'
+                sh 'cp -r ./med_app/client/clone/dist/* ./med_app/client/dist/.'
             }
         }
         stage('Deploy') {
