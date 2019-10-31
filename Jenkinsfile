@@ -10,12 +10,14 @@ pipeline {
             agent any
             steps {
                 sh 'rm -rf med_app'
-                sh 'git clone https://${USERNAME}:${PASSWORD}@github.com/mariosdrth/Med_Docker.git med_app'
-                git(
-                   url: 'https://github.com/mariosdrth/Med_Docker.git',
-                   credentialsId: 'git-creds',
-                   branch: 'master'
-                )
+                sh 'mkdir med_app'
+                dir('med_app'){
+                    git(
+                       url: 'https://github.com/mariosdrth/Med_Docker.git',
+                       credentialsId: 'git-creds',
+                       branch: 'master'
+                    )
+                }
             }
         }
 /*        stage('Build - Backend') {
