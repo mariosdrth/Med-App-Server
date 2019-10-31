@@ -11,9 +11,14 @@ pipeline {
             steps {
                 sh 'rm -rf med_app'
                 sh 'git clone https://${USERNAME}:${PASSWORD}@github.com/mariosdrth/Med_Docker.git med_app'
+                git(
+                   url: 'https://github.com/mariosdrth/Med_Docker.git',
+                   credentialsId: 'git-creds',
+                   branch: 'master'
+                )
             }
         }
-        stage('Build - Backend') {
+/*        stage('Build - Backend') {
             agent {
                 docker {
                     image 'maven:alpine'
@@ -70,5 +75,6 @@ pipeline {
                 sh 'cd ./med_app/ && docker-compose up -d'
             }
         }
+*/
     }
 }
