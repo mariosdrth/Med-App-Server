@@ -18,6 +18,22 @@ pipeline {
                 }
             }
         }
+        stage('Test') {
+            agent {
+                docker {
+                    image 'maven:alpine'
+                    args '-v /root/.m2:/root/.m2'
+                }
+            }
+            steps {
+                sh 'mvn test'
+            }
+            post {
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                }
+            }
+        }
         stage('Build - Backend') {
             agent {
                 docker {
@@ -33,22 +49,6 @@ pipeline {
             post {
                 success {
                    archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
-                }
-            }
-        }
-        stage('Test') {
-            agent {
-                docker {
-                    image 'maven:alpine'
-                    args '-v /root/.m2:/root/.m2'
-                }
-            }
-            steps {
-                sh 'mvn test'
-            }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
                 }
             }
         }
@@ -69,8 +69,8 @@ pipeline {
                        credentialsId: 'git-creds',
                        branch: 'master'
                     )
-                    sh 'cd ./med_app/client/clone && npm install'
-                    sh 'cd ./med_app/client/clone && ng build --prod'
+                    sh 'npm install'
+                    sh 'ng build --prod'
                 }
                 dir('') {
                     sh 'rm -rf ./med_app/client/dist/'
