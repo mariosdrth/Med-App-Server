@@ -63,7 +63,7 @@ pipeline {
                 dir('med_app/client') {
                     sh 'mkdir clone'
                 }
-                dir('clone') {
+                dir('med_app/client/clone') {
                     git(
                        url: 'https://github.com/mariosdrth/Med-App-Client.git',
                        credentialsId: 'git-creds',
