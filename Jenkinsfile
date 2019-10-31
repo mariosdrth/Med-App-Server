@@ -54,9 +54,9 @@ pipeline {
             }
             steps {
                 sh 'git clone https://${USERNAME}:${PASSWORD}@github.com/mariosdrth/Med-App-Client.git ./med_app/client/clone'
-                sh 'npm install -g @angular/cli@6.2.3'
-                sh 'cd ./med_app/client/clone && npm install'
-                sh 'cd ./med_app/client/clone && ng build --prod'
+                sh 'sudo npm install -g @angular/cli@6.2.3'
+                sh 'cd ./med_app/client/clone && sudo npm install'
+                sh 'cd ./med_app/client/clone && sudo ng build --prod'
                 sh 'rm -rf ./med_app/client/dist/'
                 sh 'mkdir ./med_app/client/dist/'
                 sh 'cp -r ./med_app/client/clone/dist/* ./med_app/client/dist/.'
