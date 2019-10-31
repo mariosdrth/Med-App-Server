@@ -49,6 +49,7 @@ pipeline {
             agent {
                 docker {
                     image 'node:8.11.1'
+                    args '--privileged'
                 }
             }
             steps {
