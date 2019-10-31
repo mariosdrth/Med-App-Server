@@ -2,8 +2,6 @@ pipeline {
     agent none
     environment {
         PATHDOCKER='/usr/bin/docker'
-        USERNAME='mariosdrth'
-        PASSWORD='13041981ThPa'
     }
     stages {
         stage('Preparation') {
@@ -11,7 +9,7 @@ pipeline {
             steps {
                 sh 'rm -rf med_app'
                 sh 'mkdir med_app'
-                dir('med_app'){
+                dir('med_app') {
                     git(
                        url: 'https://github.com/mariosdrth/Med_Docker.git',
                        credentialsId: 'git-creds',
@@ -20,8 +18,7 @@ pipeline {
                 }
             }
         }
-        
-/*        stage('Build - Backend') {
+        stage('Build - Backend') {
             agent {
                 docker {
                     image 'maven:alpine'
@@ -29,7 +26,9 @@ pipeline {
                 }
             }
             steps {
-                sh 'mvn -B -DskipTests clean package'
+                dir('') {
+                    sh 'mvn -B -DskipTests clean package'
+                }
             }
             post {
                 success {
@@ -61,23 +60,35 @@ pipeline {
                 }
             }
             steps {
-                sh 'git clone https://${USERNAME}:${PASSWORD}@github.com/mariosdrth/Med-App-Client.git ./med_app/client/clone'
-                sh 'cd ./med_app/client/clone && npm install'
-                sh 'cd ./med_app/client/clone && ng build --prod'
-                sh 'rm -rf ./med_app/client/dist/'
-                sh 'mkdir ./med_app/client/dist/'
-                sh 'cp -r ./med_app/client/clone/dist/* ./med_app/client/dist/.'
+                dir('med_app/client') {
+                    sh 'mkdir clone'
+                }
+                dir('clone') {
+                    git(
+                       url: 'https://github.com/mariosdrth/Med-App-Client.git',
+                       credentialsId: 'git-creds',
+                       branch: 'master'
+                    )
+                    sh 'cd ./med_app/client/clone && npm install'
+                    sh 'cd ./med_app/client/clone && ng build --prod'
+                }
+                dir('') {
+                    sh 'rm -rf ./med_app/client/dist/'
+                    sh 'mkdir ./med_app/client/dist/'
+                    sh 'cp -r ./med_app/client/clone/dist/* ./med_app/client/dist/.'
+                }
             }
         }
         stage('Deploy') {
             agent any
             steps {
-                sh 'cd ./med_app/ && docker-compose down'
-                sh 'cp /var/jenkins_home/workspace/pipeline-med-app/target/*.jar /var/jenkins_home/med_app/server/gdpr.jar'
-                sh 'cd ./med_app/ && docker-compose -f docker-compose.yml build --no-cache'
-                sh 'cd ./med_app/ && docker-compose up -d'
+                dir('med_app') {
+                    sh 'docker-compose down'
+                    sh 'cp /var/jenkins_home/workspace/pipeline-med-app/target/*.jar /var/jenkins_home/med_app/server/gdpr.jar'
+                    sh 'docker-compose build --no-cache'
+                    sh 'docker-compose up -d'
+                }
             }
         }
-*/
     }
 }
