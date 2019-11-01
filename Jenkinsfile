@@ -73,7 +73,6 @@ pipeline {
             agent {
                 docker {
                     image 'ubuntu-node-ng-chrome:1.0'
-                    args '--privileged'
                 }
             }
             options {
