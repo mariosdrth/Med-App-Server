@@ -3,9 +3,6 @@ pipeline {
     options {
         quietPeriod(5)
     }
-    environment {
-        FOLDER_PATH = "/var/jenkins_home/medapp_server"
-    }
     stages {
         stage('Preparation') {
             agent any
@@ -13,11 +10,11 @@ pipeline {
                 timeout(time: 1, unit: 'MINUTES')
             }
             steps {
-                dir('$FOLDER_PATH') {
+                dir('/var/jenkins_home/medapp_server') {
                     sh 'rm -rf med_app'
                     sh 'mkdir med_app'
                 }
-                dir('$FOLDER_PATH/med_app') {
+                dir('/var/jenkins_home/medapp_server/med_app') {
                     git(
                        url: 'https://github.com/mariosdrth/Med_Docker.git',
                        credentialsId: 'git-creds',
@@ -77,10 +74,10 @@ pipeline {
                 timeout(time: 10, unit: 'MINUTES')
             }
             steps {
-                dir('$FOLDER_PATH/med_app/client') {
+                dir('/var/jenkins_home/medapp_server/med_app/client') {
                     sh 'mkdir clone'
                 }
-                dir('$FOLDER_PATH/med_app/client/clone') {
+                dir('/var/jenkins_home/medapp_server/med_app/client/clone') {
                     git(
                        url: 'https://github.com/mariosdrth/Med-App-Client.git',
                        credentialsId: 'git-creds',
@@ -89,7 +86,7 @@ pipeline {
                     sh 'npm install'
                     sh 'ng build --prod'
                 }
-                dir('$FOLDER_PATH') {
+                dir('/var/jenkins_home/medapp_server') {
                     sh 'rm -rf ./med_app/client/dist/'
                     sh 'mkdir ./med_app/client/dist/'
                     sh 'cp -r ./med_app/client/clone/dist/* ./med_app/client/dist/.'
@@ -102,7 +99,7 @@ pipeline {
                 timeout(time: 5, unit: 'MINUTES')
             }
             steps {
-                dir('$FOLDER_PATH/med_app') {
+                dir('/var/jenkins_home/medapp_server/med_app') {
                     sh 'docker-compose down'
                     sh 'docker rmi med_app_app_client'
                     sh 'docker rmi med_app_app_server'
