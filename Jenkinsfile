@@ -1,14 +1,23 @@
 pipeline {
     agent none
+    options {
+        quietPeriod(5)
+    }
+    environment {
+        FOLDER_PATH = "/var/jenkins_home/medapp_server"
+    }
     stages {
         stage('Preparation') {
             agent any
+            options {
+                timeout(time: 1, unit: 'MINUTES')
+            }
             steps {
-                dir('/var/jenkins_home/medapp_server') {
+                dir('$FOLDER_PATH') {
                     sh 'rm -rf med_app'
                     sh 'mkdir med_app'
                 }
-                dir('/var/jenkins_home/medapp_server/med_app') {
+                dir('$FOLDER_PATH/med_app') {
                     git(
                        url: 'https://github.com/mariosdrth/Med_Docker.git',
                        credentialsId: 'git-creds',
@@ -23,6 +32,9 @@ pipeline {
                     image 'maven:alpine'
                     args '-v /root/.m2:/root/.m2'
                 }
+            }
+            options {
+                timeout(time: 2, unit: 'MINUTES')
             }
             steps {
                 sh 'mvn test'
@@ -39,6 +51,9 @@ pipeline {
                     image 'maven:alpine'
                     args '-v /root/.m2:/root/.m2'
                 }
+            }
+            options {
+                timeout(time: 3, unit: 'MINUTES')
             }
             steps {
                 dir('') {
@@ -58,11 +73,14 @@ pipeline {
                     args '--privileged'
                 }
             }
+            options {
+                timeout(time: 10, unit: 'MINUTES')
+            }
             steps {
-                dir('/var/jenkins_home/medapp_server/med_app/client') {
+                dir('$FOLDER_PATH/med_app/client') {
                     sh 'mkdir clone'
                 }
-                dir('/var/jenkins_home/medapp_server/med_app/client/clone') {
+                dir('$FOLDER_PATH/med_app/client/clone') {
                     git(
                        url: 'https://github.com/mariosdrth/Med-App-Client.git',
                        credentialsId: 'git-creds',
@@ -71,7 +89,7 @@ pipeline {
                     sh 'npm install'
                     sh 'ng build --prod'
                 }
-                dir('/var/jenkins_home/medapp_server') {
+                dir('$FOLDER_PATH') {
                     sh 'rm -rf ./med_app/client/dist/'
                     sh 'mkdir ./med_app/client/dist/'
                     sh 'cp -r ./med_app/client/clone/dist/* ./med_app/client/dist/.'
@@ -80,8 +98,11 @@ pipeline {
         }
         stage('Deploy') {
             agent any
+            options {
+                timeout(time: 5, unit: 'MINUTES')
+            }
             steps {
-                dir('/var/jenkins_home/medapp_server/med_app') {
+                dir('$FOLDER_PATH/med_app') {
                     sh 'docker-compose down'
                     sh 'docker rmi med_app_app_client'
                     sh 'docker rmi med_app_app_server'
