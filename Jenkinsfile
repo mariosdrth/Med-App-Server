@@ -1,8 +1,5 @@
 pipeline {
     agent none
-    environment {
-        PATHDOCKER='/usr/bin/docker'
-    }
     stages {
         stage('Preparation') {
             agent any
