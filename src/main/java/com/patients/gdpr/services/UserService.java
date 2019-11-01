@@ -39,7 +39,7 @@ public class UserService {
     
     public UserDTO loginUser(User user) {
         User userToFind = userRepository.findDistinctByUserName(user.getUserName());
-        if (userToFind != null) {
+        if (userToFind == null) {
             UserDTO userDTONew = new UserDTO();
             if (user.getPassword().equals(userToFind.getPassword())) {
                 userDTONew.setUserName(userToFind.getUserName());
