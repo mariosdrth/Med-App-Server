@@ -72,7 +72,7 @@ pipeline {
         stage('Build - Front End') {
             agent {
                 docker {
-                    image 'alexsuch/angular-cli:6.0'
+                    image 'mariosdrth/ubuntu-node-ng-chrome'
                     args '--privileged'
                 }
             }
