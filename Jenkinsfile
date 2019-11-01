@@ -83,6 +83,8 @@ pipeline {
             steps {
                 dir('/var/jenkins_home/medapp_server/med_app') {
                     sh 'docker-compose down'
+                    sh 'docker rmi med_app_app_client'
+                    sh 'docker rmi med_app_app_server'
                     sh 'cp /var/jenkins_home/workspace/pipeline-med-app/target/*.jar /var/jenkins_home/medapp_server/med_app/server/gdpr.jar'
                     sh 'docker-compose build --no-cache'
                     sh 'docker-compose up -d'
