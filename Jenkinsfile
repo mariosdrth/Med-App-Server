@@ -4,26 +4,7 @@ pipeline {
         quietPeriod(5)
     }
     stages {
-        stage('Preparation') {
-            agent any
-            options {
-                timeout(time: 1, unit: 'MINUTES')
-            }
-            steps {
-                dir('/var/jenkins_home/medapp_server') {
-                    sh 'rm -rf med_app'
-                    sh 'mkdir med_app'
-                }
-                dir('/var/jenkins_home/medapp_server/med_app') {
-                    git(
-                       url: 'https://github.com/mariosdrth/Med_Docker.git',
-                       credentialsId: 'git-creds',
-                       branch: 'master'
-                    )
-                }
-            }
-        }
-        stage('Test') {
+        stage('Test - Backend') {
             agent {
                 docker {
                     image 'maven:alpine'
@@ -66,6 +47,25 @@ pipeline {
             post {
                 success {
                    archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+                }
+            }
+        }
+        stage('Prepare Docker Deployment') {
+            agent any
+            options {
+                timeout(time: 1, unit: 'MINUTES')
+            }
+            steps {
+                dir('/var/jenkins_home/medapp_server') {
+                    sh 'rm -rf med_app'
+                    sh 'mkdir med_app'
+                }
+                dir('/var/jenkins_home/medapp_server/med_app') {
+                    git(
+                       url: 'https://github.com/mariosdrth/Med_Docker.git',
+                       credentialsId: 'git-creds',
+                       branch: 'master'
+                    )
                 }
             }
         }
