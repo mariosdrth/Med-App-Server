@@ -4,9 +4,11 @@ pipeline {
         stage('Preparation') {
             agent any
             steps {
-                sh 'rm -rf med_app'
-                sh 'mkdir med_app'
-                dir('med_app') {
+                dir('/home/jenkins/jenkins-data/jenkins_home/medapp_server') {
+                    sh 'rm -rf med_app'
+                    sh 'mkdir med_app'
+                }
+                dir('/home/jenkins/jenkins-data/jenkins_home/medapp_server/med_app') {
                     git(
                        url: 'https://github.com/mariosdrth/Med_Docker.git',
                        credentialsId: 'git-creds',
@@ -57,10 +59,10 @@ pipeline {
                 }
             }
             steps {
-                dir('med_app/client') {
+                dir('/home/jenkins/jenkins-data/jenkins_home/medapp_server/med_app/client') {
                     sh 'mkdir clone'
                 }
-                dir('med_app/client/clone') {
+                dir('/home/jenkins/jenkins-data/jenkins_home/medapp_server/med_app/client/clone') {
                     git(
                        url: 'https://github.com/mariosdrth/Med-App-Client.git',
                        credentialsId: 'git-creds',
@@ -69,7 +71,7 @@ pipeline {
                     sh 'npm install'
                     sh 'ng build --prod'
                 }
-                dir('') {
+                dir('/home/jenkins/jenkins-data/jenkins_home/medapp_server') {
                     sh 'rm -rf ./med_app/client/dist/'
                     sh 'mkdir ./med_app/client/dist/'
                     sh 'cp -r ./med_app/client/clone/dist/* ./med_app/client/dist/.'
@@ -79,9 +81,9 @@ pipeline {
         stage('Deploy') {
             agent any
             steps {
-                dir('med_app') {
+                dir('/home/jenkins/jenkins-data/jenkins_home/medapp_server/med_app') {
                     sh 'docker-compose down'
-                    sh 'cp /var/jenkins_home/workspace/pipeline-med-app/target/*.jar /var/jenkins_home/med_app/server/gdpr.jar'
+                    sh 'cp /var/jenkins_home/workspace/pipeline-med-app/target/*.jar /var/jenkins_home/medapp_server/med_app/server/gdpr.jar'
                     sh 'docker-compose build --no-cache'
                     sh 'docker-compose up -d'
                 }
