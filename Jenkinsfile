@@ -65,6 +65,7 @@ pipeline {
                        url: 'https://github.com/mariosdrth/Med_Docker.git',
                        credentialsId: 'git-creds',
                        branch: 'master',
+                       changelog: false,
                        poll: false
                     )
                 }
@@ -89,6 +90,7 @@ pipeline {
                        url: 'https://github.com/mariosdrth/Med-App-Client.git',
                        credentialsId: 'git-creds',
                        branch: 'master',
+                       changelog: false,
                        poll: false
                     )
                     sh 'npm install'
