@@ -93,8 +93,8 @@ pipeline {
                        changelog: false,
                        poll: false
                     )
-                    //sh 'npm install'
-                    //sh 'ng build --prod'
+                    sh 'npm install'
+                    sh 'ng build --prod'
                 }
                 dir('/var/jenkins_home/medapp_server') {
                     sh 'rm -rf ./med_app/client/dist/'
@@ -103,7 +103,7 @@ pipeline {
                 }
             }
         }
-        /*stage('Deploy') {
+        stage('Deploy') {
             agent any
             options {
                 timeout(time: 5, unit: 'MINUTES')
@@ -117,6 +117,6 @@ pipeline {
                     sh 'docker-compose up -d'
                 }
             }
-        }*/
+        }
     }
 }
