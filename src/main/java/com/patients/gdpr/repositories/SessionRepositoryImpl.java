@@ -69,10 +69,8 @@ public class SessionRepositoryImpl implements SessionCustom {
             builder.and(qSession.patientId.eq(sessionSearch.getPatientId()));
         }
         
-        if (sessionSearch.getPatientForSessionDTO() != null) {
-            if (sessionSearch.getPatientForSessionDTO().getId() != null) {
-                builder.and(qSession.patientId.eq(sessionSearch.getPatientForSessionDTO().getId()));
-            }
+        if (sessionSearch.getPatientForSessionDTO() != null && sessionSearch.getPatientForSessionDTO().getId() != null) {
+            builder.and(qSession.patientId.eq(sessionSearch.getPatientForSessionDTO().getId()));
         }
     
         if (sessionSearch.getPatientForSessionDTOList() != null) {

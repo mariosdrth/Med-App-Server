@@ -46,8 +46,7 @@ public class UserRoleService {
     }
     
     public Optional<UserRole> checkForEntity(BigInteger id) {
-        Optional<UserRole> checkUserRole = userRoleRepository.findById(id);
-        return checkUserRole;
+        return userRoleRepository.findById(id);
     }
     
     public UserRoleDTO entityToDTO(UserRole userRole) {

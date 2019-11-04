@@ -23,7 +23,7 @@ public class ConnectionService {
     
     public ConnectionDTO createEntity(ConnectionDTO connectionDTO) {
         List<Connection> connections = connectionRepository.getAllByIp(connectionDTO.getIp());
-        if (connections.size() == 0) {
+        if (connections.isEmpty()) {
             Connection connection = connectionRepository.save(DTOToEntity(connectionDTO));
             connectionDTO.setId(connection.getId());
         } else {

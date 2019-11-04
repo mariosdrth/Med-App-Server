@@ -20,7 +20,10 @@ public class EmailSenderService {
     public UserService userService;
     @Autowired
     public UserRepository userRepository;
-    
+
+    private static final String GUEST_USER = "guest";
+    private static final String DOUBLE_NEW_LINE = "\n";
+
     public void sendSimpleMessage(EmailSenderDTO emailSenderDTO) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(emailSenderDTO.getReceiver());
@@ -33,11 +36,11 @@ public class EmailSenderService {
         }
         String body;
         if (emailSenderDTO.getLanguage() == null || !emailSenderDTO.getLanguage().equalsIgnoreCase("gr")) {
-            body = "Email from " + emailSenderDTO.getSenderName() +". \n\n" + "Contact email address: " +
-                    emailSenderDTO.getSenderEmail() + ". \n\n" + "Message: \n" + emailSenderDTO.getMessage();
+            body = "Email from " + emailSenderDTO.getSenderName() + ". " + DOUBLE_NEW_LINE + "Contact email address: " +
+                    emailSenderDTO.getSenderEmail() + ". " + DOUBLE_NEW_LINE + "Message: \n" + emailSenderDTO.getMessage();
         } else {
-            body = "Ηλεκτρονικό μήνυμα από " + emailSenderDTO.getSenderName() +". \n\n" + "Διεύθυνση email: " +
-                    emailSenderDTO.getSenderEmail() + ". \n\n" + "Μήνυμα: \n" + emailSenderDTO.getMessage();
+            body = "Ηλεκτρονικό μήνυμα από " + emailSenderDTO.getSenderName() + ". " + DOUBLE_NEW_LINE + "Διεύθυνση email: " +
+                    emailSenderDTO.getSenderEmail() + ". " + DOUBLE_NEW_LINE + "Μήνυμα: \n" + emailSenderDTO.getMessage();
         }
         message.setText(body);
         emailSender.send(message);
@@ -56,33 +59,41 @@ public class EmailSenderService {
             String body;
             if (emailSenderDTO.getLanguage() == null || !emailSenderDTO.getLanguage().equalsIgnoreCase("gr")) {
                 subject = "Reset Password";
-                if (!userToChange.getUserName().equals("guest")) {
-                    body = "Your new password is " + randomStr + ". It is recommended to change this password immediately" +
-                            " after next connection.";
-                } else {
-                    body = "Your new password would be " + randomStr + ". \nSince this is the guest user password " +
-                            "will remain the same (guest).";
-                }
+                body = buildMessage(userToChange, randomStr);
             } else {
                 subject = "Επαναφορά Κωδικού";
-                if (!userToChange.getUserName().equals("guest")) {
-                    body = "Ο νέος σας κωδικός είναι " + randomStr + ". Συνιστάται να αλλάξετε αυτόν τον κωδικό αμέσως " +
-                            "μετά την επόμενη σύνδεση.";
-                } else {
-                    body = "Ο νέος σας κωδικός θα ήταν " + randomStr + ". \nΕπειδή πρόκειται για τον χρήστη guest ο " +
-                            "κωδικός θα παραμείνει ο ίδιος (guest).";
-                }
+                body = buildMessageAlt(userToChange, randomStr);
             }
             message.setSubject(subject);
             message.setText(body);
             emailSender.send(message);
-            if (!userToChange.getUserName().equals("guest")) {
+            if (!userToChange.getUserName().equals(GUEST_USER)) {
                 userToChange.setPassword(randomStr);
                 userRepository.save(userToChange);
             }
             return emailSenderDTO;
         } else {
             return null;
+        }
+    }
+
+    private String buildMessage(User user, String randomStr) {
+        if (!user.getUserName().equals(GUEST_USER)) {
+            return "Your new password is " + randomStr + ". It is recommended to change this password immediately" +
+                    " after next connection.";
+        } else {
+            return "Your new password would be " + randomStr + ". \nSince this is the guest user password " +
+                    "will remain the same (guest).";
+        }
+    }
+
+    private String buildMessageAlt(User user, String randomStr) {
+        if (!user.getUserName().equals(GUEST_USER)) {
+            return "Ο νέος σας κωδικός είναι " + randomStr + ". Συνιστάται να αλλάξετε αυτόν τον κωδικό αμέσως " +
+                    "μετά την επόμενη σύνδεση.";
+        } else {
+            return "Ο νέος σας κωδικός θα ήταν " + randomStr + ". \nΕπειδή πρόκειται για τον χρήστη guest ο " +
+                    "κωδικός θα παραμείνει ο ίδιος (guest).";
         }
     }
 }

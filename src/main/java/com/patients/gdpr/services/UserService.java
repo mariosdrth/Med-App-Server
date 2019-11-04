@@ -32,16 +32,15 @@ public class UserService {
             User user = userRepository.save(DTOToEntity(userDTO));
             userDTO.setId(user.getId());
             userDTO.setUserRole(userRoleRepository.getOne(user.getUserRoleId()));
-//            userDTO.setPassword(null);
         }
         return userDTOList;
     }
     
-    public UserDTO loginUser(User user) {
-        User userToFind = userRepository.findDistinctByUserName(user.getUserName());
+    public UserDTO loginUser(UserDTO userDTO) {
+        User userToFind = userRepository.findDistinctByUserName(userDTO.getUserName());
         if (userToFind != null) {
             UserDTO userDTONew = new UserDTO();
-            if (user.getPassword().equals(userToFind.getPassword())) {
+            if (userDTO.getPassword().equals(userToFind.getPassword())) {
                 userDTONew.setUserName(userToFind.getUserName());
                 userDTONew.setId(userToFind.getId());
                 userDTONew.setUserRoleId(userToFind.getUserRoleId());
@@ -75,8 +74,7 @@ public class UserService {
     }
     
     public Optional<User> checkForEntity(BigInteger id) {
-        Optional<User> checkUser = userRepository.findById(id);
-        return checkUser;
+        return userRepository.findById(id);
     }
     
     public UserDTO entityToDTO(User user) {

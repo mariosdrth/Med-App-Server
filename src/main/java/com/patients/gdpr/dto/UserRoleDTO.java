@@ -3,13 +3,11 @@ package com.patients.gdpr.dto;
 import com.patients.gdpr.model.UserRole;
 
 import java.math.BigInteger;
-import java.util.List;
 
 public class UserRoleDTO {
     
     private BigInteger id;
     private String description;
-    private List<UserDTO> usersDTO;
     
     public UserRoleDTO() {
     }

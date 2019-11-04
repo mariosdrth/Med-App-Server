@@ -81,8 +81,7 @@ public class SessionService {
     }
     
     public Optional<Session> checkForEntity(BigInteger id) {
-        Optional<Session> checkSession = sessionRepository.findById(id);
-        return checkSession;
+        return sessionRepository.findById(id);
     }
     
     public SessionDTO entityToDTO(Session session) {

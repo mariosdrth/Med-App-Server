@@ -43,11 +43,7 @@ public class SettingsService {
     
     public boolean checkForEntity(BigInteger userId) {
         try {
-            if (settingsRepository.getDistinctByUserId(userId).getId() != null) {
-                return true;
-            } else {
-                return false;
-            }
+            return settingsRepository.getDistinctByUserId(userId).getId() != null;
         } catch (NullPointerException e) {
             return false;
         }

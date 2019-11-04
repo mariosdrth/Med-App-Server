@@ -8,7 +8,6 @@ public class UserSearch extends BaseSearch {
     
     private BigInteger id;
     private String userName;
-    //private String password;
     private String name;
     private String surname;
     private BigInteger userRoleId;
@@ -31,15 +30,7 @@ public class UserSearch extends BaseSearch {
     public void setUserName(String userName) {
         this.userName = userName;
     }
-    
-//    public String getPassword() {
-//        return password;
-//    }
-//
-//    public void setPassword(String password) {
-//        this.password = password;
-//    }
-    
+
     public String getName() {
         return name;
     }

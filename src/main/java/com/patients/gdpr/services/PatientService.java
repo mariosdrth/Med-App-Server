@@ -61,7 +61,7 @@ public class PatientService {
         Patient patient = patientRepository.getOne(id);
         if (!patient.getName().equals(patientDTO.getName()) || !patient.getSurname().equals(patientDTO.getSurname())) {
             List<Session> sessions = sessionRepository.findAllByPatientId(id);
-            if (sessions.size() > 0) {
+            if (!sessions.isEmpty()) {
                 for (Session session : sessions) {
                     session.setPatientName(patientDTO.getSurname() + " " + patientDTO.getName());
                     sessionRepository.save(session);
@@ -81,8 +81,7 @@ public class PatientService {
     }
     
     public Optional<Patient> checkForEntity(BigInteger id) {
-        Optional<Patient> checkPatient = patientRepository.findById(id);
-        return checkPatient;
+        return patientRepository.findById(id);
     }
     
     public PatientDTO entityToDTO(Patient patient) {

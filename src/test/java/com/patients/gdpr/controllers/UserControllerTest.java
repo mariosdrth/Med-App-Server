@@ -28,8 +28,8 @@ public class UserControllerTest {
 
     @Test
     public void loginUserTest() {
-        Mockito.when(userService.loginUser(user)).thenReturn(userDTO);
-        Assert.assertEquals(userDTO, userController.loginUser(user));
+        Mockito.when(userService.loginUser(userDTO)).thenReturn(userDTO);
+        Assert.assertEquals(userDTO, userController.loginUser(userDTO));
     }
 
 }

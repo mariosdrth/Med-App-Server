@@ -2,7 +2,6 @@ package com.patients.gdpr.controllers;
 
 import com.patients.gdpr.dto.UserDTO;
 import com.patients.gdpr.dto.UserSearch;
-import com.patients.gdpr.model.User;
 import com.patients.gdpr.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -41,8 +40,8 @@ public class UserController {
     
     @PostMapping(value = "/login")
     @ResponseBody
-    public UserDTO loginUser(@RequestBody User user) {
-        return userService.loginUser(user);
+    public UserDTO loginUser(@RequestBody UserDTO userDTO) {
+        return userService.loginUser(userDTO);
     }
     
     @PutMapping(value = "/{id}")
