@@ -4,6 +4,16 @@ pipeline {
         quietPeriod(5)
     }
     stages {
+        stage ('PR check') {
+            when {
+                branch 'PR-*'
+                }
+            steps {
+                sh '''
+                echo "PULL REQUEST CHECK IS DONE HERE"
+                '''
+            }
+        }
         stage('Test - Backend') {
             agent {
                 docker {
