@@ -5,6 +5,7 @@ pipeline {
     }
     stages {
         stage ('PR check') {
+            agent any
             when {
                 branch 'PR-*'
                 }
