@@ -1,12 +1,11 @@
 package com.patients.gdpr.services;
 
 import com.patients.gdpr.dto.EmailSenderDTO;
+import com.patients.gdpr.dto.MailDTO;
 import com.patients.gdpr.model.User;
 import com.patients.gdpr.repositories.UserRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -15,19 +14,17 @@ import java.security.SecureRandom;
 public class EmailSenderService {
     
     @Autowired
-    public JavaMailSender emailSender;
-    @Autowired
     public UserService userService;
     @Autowired
     public UserRepository userRepository;
+    @Autowired
+    private EmailRestApiService emailRestApiService;
 
     private static final String GUEST_USER = "guest";
     private static final String DOUBLE_NEW_LINE = "\n";
 
     public void sendSimpleMessage(EmailSenderDTO emailSenderDTO) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(emailSenderDTO.getReceiver());
-        message.setSubject(emailSenderDTO.getSubject());
+
         if (emailSenderDTO.getSenderName() == null) {
             emailSenderDTO.setSenderName(" - ");
         }
@@ -42,15 +39,16 @@ public class EmailSenderService {
             body = "Ηλεκτρονικό μήνυμα από " + emailSenderDTO.getSenderName() + ". " + DOUBLE_NEW_LINE + "Διεύθυνση email: " +
                     emailSenderDTO.getSenderEmail() + ". " + DOUBLE_NEW_LINE + "Μήνυμα: \n" + emailSenderDTO.getMessage();
         }
-        message.setText(body);
-        emailSender.send(message);
+    
+        emailRestApiService.sendMailWithWebClient(new MailDTO(emailSenderDTO.getSubject(), body,
+                emailSenderDTO.getReceiver()));
     }
+    
+    
     
     public EmailSenderDTO sendResetPassEmail(EmailSenderDTO emailSenderDTO) {
         if (userService.checkForEntity(userRepository.findDistinctByUserName(emailSenderDTO.getUserName()).getId()).isPresent()) {
             User userToChange = userRepository.findDistinctByUserName(emailSenderDTO.getUserName());
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo(emailSenderDTO.getReceiver());
             String allCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[{]}\\|;:<>/?";
             char[] possibleCharacters = (allCharacters).toCharArray();
             String randomStr = RandomStringUtils.random(8, 0, possibleCharacters.length - 1, false, false,
@@ -64,13 +62,14 @@ public class EmailSenderService {
                 subject = "Επαναφορά Κωδικού";
                 body = buildMessageAlt(userToChange, randomStr);
             }
-            message.setSubject(subject);
-            message.setText(body);
-            emailSender.send(message);
+    
+            emailRestApiService.sendMailWithWebClient(new MailDTO(subject, body, emailSenderDTO.getReceiver()));
+    
             if (!userToChange.getUserName().equals(GUEST_USER)) {
                 userToChange.setPassword(randomStr);
                 userRepository.save(userToChange);
             }
+            
             return emailSenderDTO;
         } else {
             return null;
